@@ -317,8 +317,11 @@
                 align-items: center;
             }
         }
-        .upload-btn, #challengeEditControls {
+        .home-btn, .upload-btn, #challengeEditControls {
             display: none;
+        }
+        body.editing-mode .home-btn {
+            display: flex;
         }
         body.editing-mode .upload-btn {
             display: inline-flex;
