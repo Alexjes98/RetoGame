@@ -190,8 +190,8 @@
 
         .team-row {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 5px;
             margin-bottom: 20px;
         }
 
@@ -199,7 +199,7 @@
             background: rgba(33, 150, 243, 0.1);
             border: 2px solid #2196F3;
             border-radius: 12px;
-            padding: 15px;
+            padding: 5px;
             text-align: center;
             transition: all 0.3s ease;
         }
@@ -389,13 +389,10 @@
                     <button class="timer-btn stop-btn" onclick="stopTimer(3)">⏹</button>
                 </div>
             </div>
-        </div>
-
-        <div class="main-content">
             <div class="sidebar">
                 <div class="challenge-card">
-                    <div class="challenge-title">Reto al conocimiento</div>
-                    <div id="challengeContent">Ingenierías</div>
+                    <h1 class="challenge-title">Reto al conocimiento</h1>
+                    <h2 id="challengeContent">Ingenierías</h2>
                     <div id="challengeEditControls" style="margin-top:10px; gap:5px;">
                         <input type="text" id="challengeInput" placeholder="Nuevo contenido..." style="flex:1; padding:5px; border-radius:6px; border:1px solid #ccc;">
                         <button id="challengeUpdateBtn" style="padding:5px 10px; border-radius:6px; border:none; background:#2196F3; color:white; cursor:pointer;">Actualizar</button>
@@ -405,7 +402,9 @@
                     <div class="current-time" id="currentTime">4:18 PM</div>
                 </div>
             </div>
+        </div>
 
+        <div class="main-content">
             <div class="counters-section">
                 <div class="team-row team-1" id="team1Row">
                     <div class="counter">
