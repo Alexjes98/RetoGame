@@ -351,6 +351,17 @@
     </style>
 </head>
 <body>
+    <!-- Audio elements for sounds -->
+    <audio id="facilSound" preload="auto">
+        <source src="facil30sg.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="mediaSound" preload="auto">
+        <source src="media90sg.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="dificilSound" preload="auto">
+        <source src="dificil150sg.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="container">
         <div class="header">
             <button class="home-btn">🏠</button>
@@ -358,6 +369,7 @@
             <button class="upload-btn" id="uploadBtn" onclick="document.getElementById('backgroundInput').click()">
                 📁 Cambiar Fondo
             </button>
+            <button onclick="testAudio()" style="background:rgba(255,255,255,0.9); border:none; border-radius:15px; width:auto; height:40px; padding:0 15px; font-size:14px; cursor:pointer;">🔊 Test Audio</button>
         </div>
 
         <input type="file" id="backgroundInput" accept="image/*" onchange="changeBackground(event)">
@@ -539,7 +551,73 @@
         </div>
     </div>
 
+    <!-- Audio elements for sounds -->
+    <audio id="facilSound" preload="auto">
+        <source src="facil30sg.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="mediaSound" preload="auto">
+        <source src="media90sg.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="dificilSound" preload="auto">
+        <source src="dificil150sg.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
+        // Audio elements
+        const facilSound = document.getElementById('facilSound');
+        const mediaSound = document.getElementById('mediaSound');
+        const dificilSound = document.getElementById('dificilSound');
+        
+        // Function to play sound based on timer
+        function playSoundForTimer(timerId) {
+            console.log('playSoundForTimer', timerId);
+            switch(timerId) {
+                case 1:
+                    console.log('Playing facilSound');
+                    facilSound.currentTime = 0;
+                    facilSound.play().catch(error => {
+                        console.error('Error playing facilSound:', error);
+                    });
+                    break;
+                case 2:
+                    console.log('Playing mediaSound');
+                    mediaSound.currentTime = 0;
+                    mediaSound.play().catch(error => {
+                        console.error('Error playing mediaSound:', error);
+                    });
+                    break;
+                case 3:
+                    console.log('Playing dificilSound');
+                    dificilSound.currentTime = 0;
+                    dificilSound.play().catch(error => {
+                        console.error('Error playing dificilSound:', error);
+                    });
+                    break;
+            }
+        }
+        
+        // Function to stop all sounds
+        function stopAllSounds() {
+            facilSound.pause();
+            facilSound.currentTime = 0;
+            mediaSound.pause();
+            mediaSound.currentTime = 0;
+            dificilSound.pause();
+            dificilSound.currentTime = 0;
+        }
+        
+        // Function to test audio (for debugging)
+        function testAudio() {
+            console.log('Testing audio...');
+            facilSound.play().then(() => {
+                console.log('Audio test successful');
+                facilSound.pause();
+                facilSound.currentTime = 0;
+            }).catch(error => {
+                console.error('Audio test failed:', error);
+            });
+        }
+
         // Timer management
         const timers = {
             1: { duration: 30, remaining: 30, interval: null, running: false },
@@ -611,20 +689,52 @@
         }
         // Override increment/decrement
         function incrementCounter(counterId) {
+            console.log('incrementCounter called with counterId:', counterId);
             if (counterId <= 6) {
                 team1Counters[counterId-1] += 5;
             } else {
                 team2Counters[counterId-7] += 5;
             }
             updateCounterDisplays();
+            
+            // Play sound when counter is clicked
+            // Determine which timer is currently running and play its sound
+            let soundPlayed = false;
+            for (let timerId = 1; timerId <= 3; timerId++) {
+                if (timers[timerId].running) {
+                    console.log('Timer', timerId, 'is running, playing sound');
+                    playSoundForTimer(timerId);
+                    soundPlayed = true;
+                    break;
+                }
+            }
+            if (!soundPlayed) {
+                console.log('No timer is running, not playing sound');
+            }
         }
         function decrementCounter(counterId) {
+            console.log('decrementCounter called with counterId:', counterId);
             if (counterId <= 6) {
                 if (team1Counters[counterId-1] >= 5) team1Counters[counterId-1] -= 5;
             } else {
                 if (team2Counters[counterId-7] >= 5) team2Counters[counterId-7] -= 5;
             }
             updateCounterDisplays();
+            
+            // Play sound when counter is clicked
+            // Determine which timer is currently running and play its sound
+            let soundPlayed = false;
+            for (let timerId = 1; timerId <= 3; timerId++) {
+                if (timers[timerId].running) {
+                    console.log('Timer', timerId, 'is running, playing sound');
+                    playSoundForTimer(timerId);
+                    soundPlayed = true;
+                    break;
+                }
+            }
+            if (!soundPlayed) {
+                console.log('No timer is running, not playing sound');
+            }
         }
         // Add/Remove counter logic
         function addCounter(team) {
@@ -750,6 +860,8 @@
         function startTimer(timerId) {
             const timer = timers[timerId];
             if (timer.running) return;
+
+            playSoundForTimer(timerId);
             
             timer.running = true;
             timer.interval = setInterval(() => {
@@ -758,7 +870,8 @@
                 
                 if (timer.remaining <= 0) {
                     stopTimer(timerId);
-                    alert(`¡Tiempo agotado para el timer ${timerId}!`);
+                    // Stop all sounds when timer reaches 0
+                    stopAllSounds();
                 }
             }, 1000);
         }
@@ -825,10 +938,9 @@
             }
             
             // Reset all counters
-            for (let i = 1; i <= 12; i++) {
-                counters[i] = 0;
-                document.getElementById(`counter${i}`).textContent = counters[i];
-            }
+            team1Counters.fill(0);
+            team2Counters.fill(0);
+            updateCounterDisplays();
         });
 
         // Challenge content update functionality
