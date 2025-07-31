@@ -349,6 +349,28 @@
             background: white;
             outline: none;
         }
+
+        body.editing-mode .edit-toggle-btn {
+            color: #ffffff;
+            background: #2196F3;
+            z-index: 1000;
+        }
+
+        .edit-toggle-btn {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: #000000;
+            background:rgb(255, 255, 255);
+            border:none;
+            border-radius:15px;
+            width:auto;
+            height:40px;
+            padding:0 15px;
+            font-size:14px;
+            margin-right:10px;
+        }
     </style>
 </head>
 <body>
@@ -366,7 +388,7 @@
     <div class="container">
         <div class="header">
             <button class="home-btn">🏠</button>
-            <button class="edit-toggle-btn" id="editToggleBtn" style="margin-right:10px; background:rgba(255,255,255,0.9); border:none; border-radius:15px; width:auto; height:40px; padding:0 15px; font-size:14px; cursor:pointer;">Editar</button>
+            <button class="edit-toggle-btn" id="editToggleBtn">Editar</button>
             <button class="upload-btn" id="uploadBtn" onclick="document.getElementById('backgroundInput').click()">
                 📁 Cambiar Fondo
             </button>
