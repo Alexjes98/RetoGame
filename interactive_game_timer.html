@@ -369,7 +369,6 @@
             <button class="upload-btn" id="uploadBtn" onclick="document.getElementById('backgroundInput').click()">
                 📁 Cambiar Fondo
             </button>
-            <button onclick="testAudio()" style="background:rgba(255,255,255,0.9); border:none; border-radius:15px; width:auto; height:40px; padding:0 15px; font-size:14px; cursor:pointer;">🔊 Test Audio</button>
         </div>
 
         <input type="file" id="backgroundInput" accept="image/*" onchange="changeBackground(event)">
@@ -569,26 +568,26 @@
         const dificilSound = document.getElementById('dificilSound');
         
         // Function to play sound based on timer
-        function playSoundForTimer(timerId) {
+        function playSoundForTimer(timerId, resume = false) {
             console.log('playSoundForTimer', timerId);
             switch(timerId) {
                 case 1:
                     console.log('Playing facilSound');
-                    facilSound.currentTime = 0;
+                    if (!resume) facilSound.currentTime = 0;
                     facilSound.play().catch(error => {
                         console.error('Error playing facilSound:', error);
                     });
                     break;
                 case 2:
                     console.log('Playing mediaSound');
-                    mediaSound.currentTime = 0;
+                    if (!resume) mediaSound.currentTime = 0;
                     mediaSound.play().catch(error => {
                         console.error('Error playing mediaSound:', error);
                     });
                     break;
                 case 3:
                     console.log('Playing dificilSound');
-                    dificilSound.currentTime = 0;
+                    if (!resume) dificilSound.currentTime = 0;
                     dificilSound.play().catch(error => {
                         console.error('Error playing dificilSound:', error);
                     });
@@ -604,18 +603,6 @@
             mediaSound.currentTime = 0;
             dificilSound.pause();
             dificilSound.currentTime = 0;
-        }
-        
-        // Function to test audio (for debugging)
-        function testAudio() {
-            console.log('Testing audio...');
-            facilSound.play().then(() => {
-                console.log('Audio test successful');
-                facilSound.pause();
-                facilSound.currentTime = 0;
-            }).catch(error => {
-                console.error('Audio test failed:', error);
-            });
         }
 
         // Timer management
@@ -696,21 +683,6 @@
                 team2Counters[counterId-7] += 5;
             }
             updateCounterDisplays();
-            
-            // Play sound when counter is clicked
-            // Determine which timer is currently running and play its sound
-            let soundPlayed = false;
-            for (let timerId = 1; timerId <= 3; timerId++) {
-                if (timers[timerId].running) {
-                    console.log('Timer', timerId, 'is running, playing sound');
-                    playSoundForTimer(timerId);
-                    soundPlayed = true;
-                    break;
-                }
-            }
-            if (!soundPlayed) {
-                console.log('No timer is running, not playing sound');
-            }
         }
         function decrementCounter(counterId) {
             console.log('decrementCounter called with counterId:', counterId);
@@ -727,7 +699,7 @@
             for (let timerId = 1; timerId <= 3; timerId++) {
                 if (timers[timerId].running) {
                     console.log('Timer', timerId, 'is running, playing sound');
-                    playSoundForTimer(timerId);
+                    playSoundForTimer(timerId, true);
                     soundPlayed = true;
                     break;
                 }
@@ -870,8 +842,6 @@
                 
                 if (timer.remaining <= 0) {
                     stopTimer(timerId);
-                    // Stop all sounds when timer reaches 0
-                    stopAllSounds();
                 }
             }, 1000);
         }
@@ -890,6 +860,21 @@
             pauseTimer(timerId);
             timer.remaining = timer.duration;
             updateTimerDisplay(timerId);
+            stopAllSounds();
+        }
+
+        function pauseSound(timerId) {
+            switch(timerId) {
+                case 1:
+                    facilSound.pause();
+                    break;
+                case 2:
+                    mediaSound.pause();
+                    break;
+                case 3:
+                    dificilSound.pause();
+                    break;
+            }
         }
 
         function updateCurrentTime() {
